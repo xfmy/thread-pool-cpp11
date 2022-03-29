@@ -11,6 +11,44 @@
 #define INIT_THREAD_COUNT	10
 #define THRESHOLD			1024
 
+//cpp 17 Any类型
+class CAny
+{
+private:
+	class BASE {
+	public:
+		virtual ~BASE() = default;
+	};
+
+	template <typename T>
+	class CDerive : public BASE
+	{
+	private:
+		T data;
+	public:
+		CDerive(T _data) :data(_data) {}
+	};
+public:
+	template <typename T>
+	CAny(T val) :m_data(std::make_unique<CDerive<T>>(val)) {}
+	CAny() = delete;
+	~CAny() = default;
+	CAny operator=(const CAny&) = delete;
+	CAny(const CAny&) = delete;
+
+	template <typename T>
+	T cast()
+	{
+		CDerive<T>* p = dynamic_cast<CDerive<T>*>(m_data.get());
+		if (p == nullptr)
+			throw "类型不匹配，转换失败";
+		return p->data;
+	}
+private:
+	std::unique_ptr<BASE> m_data;
+};
+
+
 //线程池模式
 enum class CPollMode
 {
@@ -22,13 +60,13 @@ enum class CPollMode
 class CTask
 {
 public:
-	virtual void CallFunction(){}
+	virtual CAny CallFunction(){}
 };
-class CThreadPoll;
+//class CThreadPoll;
 //线程类
 class CThread
 {
-	using FUNTYPE = std::function<void()>;
+	using FUNTYPE = std::function<CAny()>;
 public:
 	CThread(FUNTYPE parameter):m_callFun(parameter){}
 	void start();
@@ -58,4 +96,3 @@ public:
 	CThreadPoll();
 	~CThreadPoll();
 };
-

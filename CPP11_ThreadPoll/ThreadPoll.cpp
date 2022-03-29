@@ -96,8 +96,8 @@ void CTask::exec()
 CResult::CResult(const CResult& temp)
 {
 	m_sp = temp.m_sp;
-	m_any = std::move(static_cast<CResult>(temp).m_any);
-	m_bl = static_cast<bool>(temp.m_bl);
+	m_any = std::move(const_cast<CResult*>(&temp)->m_any);
+	m_bl = temp.m_bl.load();
 }
 
 void CResult::SetTask(CAny any)

@@ -63,7 +63,7 @@ class CResult;
 class CTask
 {
 private:
-	CResult* m_result;
+	CResult* m_result = nullptr;
 public:
 	void setResult(CResult* p);
 	virtual CAny CallFunction() { return nullptr; }
@@ -140,5 +140,4 @@ public:
 	void SetTask(CAny any);
 	CAny Get();
 	emaphore					m_emaphore;
-	
 };

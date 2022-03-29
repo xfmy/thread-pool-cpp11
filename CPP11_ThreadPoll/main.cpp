@@ -11,13 +11,11 @@ class task : public CTask
 
 int main()
 {
-    /*CThreadPoll poll;
+    CThreadPoll poll;
     poll.Start();
     for (int i = 0; i < 1000; i++) {
         CResult res = poll.AddTask(std::make_shared<task>());
         CAny any = res.Get();
         std::cout << any.cast<unsigned int>() << '\n';
-    }*/
-    std::mutex					m_mutex;
-    std::unique_lock<std::mutex> lock(m_mutex);
+    }
 }

@@ -11,10 +11,13 @@ class task : public CTask
 
 int main()
 {
-    CThreadPoll poll;
-    poll.SetMode(CPollMode::MODE_FIXED);
+    /*CThreadPoll poll;
     poll.Start();
-    for (size_t i = 0; i < 1000; i++)
-    poll.AddTask(std::make_shared<task>());
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    for (int i = 0; i < 1000; i++) {
+        CResult res = poll.AddTask(std::make_shared<task>());
+        CAny any = res.Get();
+        std::cout << any.cast<unsigned int>() << '\n';
+    }*/
+    std::mutex					m_mutex;
+    std::unique_lock<std::mutex> lock(m_mutex);
 }

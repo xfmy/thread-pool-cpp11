@@ -5,18 +5,18 @@ void CThreadPoll::SetMode(CPollMode parameter)
 	m_mode = parameter;
 }
 
-bool CThreadPoll::AddTask(std::shared_ptr<CTask> sp)
+CResult CThreadPoll::AddTask(std::shared_ptr<CTask> sp)
 {
 	std::unique_lock<std::mutex> lock(m_queMut);
 	//如果任务队列超过1s上阕，则返回
 	bool res = m_notFull.wait_for(lock, std::chrono::seconds(1), 
 		[this]()->bool { return m_que.size() < m_taskMax; });
 	if (!res) 
-		return false;
+		return CResult(sp);
 	m_que.emplace(sp);//添加任务
 	m_taskSize++;
-	m_notFull.notify_all();
-	return true;
+	m_notEmpty.notify_all();
+	return CResult(sp, true);
 }
 
 void CThreadPoll::Start(int count)
@@ -39,7 +39,7 @@ void CThreadPoll::SetTaskQueMaxThreshold(int threshhold)
 
 void CThreadPoll::CallThreadFunction()
 {
-	while (true)
+	while (m_taskSize != -1)
 	{
 		std::shared_ptr<CTask> sp;
 		{
@@ -53,7 +53,7 @@ void CThreadPoll::CallThreadFunction()
 			m_notFull.notify_all();
 		}//释放锁
 		if (sp != nullptr)
-			sp->CallFunction();
+			sp->exec();
 	}
 }
 
@@ -68,7 +68,8 @@ CThreadPoll::CThreadPoll()
 CThreadPoll::~CThreadPoll()
 {
 	//TODO 队列释放
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	//std::this_thread::sleep_for(std::chrono::seconds(1));
+	m_taskSize = -1;
 }
 
 
@@ -78,4 +79,36 @@ CThreadPoll::~CThreadPoll()
 void CThread::start() {
 	std::thread th(m_callFun);
 	th.detach();
+}
+
+void CTask::setResult(CResult* p)
+{
+	m_result = p;
+}
+
+void CTask::exec()
+{
+	if (m_result != nullptr) {
+		m_result->SetTask(CallFunction());
+	}
+}
+
+CResult::CResult(const CResult& temp)
+{
+	m_sp = temp.m_sp;
+	m_any = std::move(static_cast<CResult>(temp).m_any);
+	m_bl = static_cast<bool>(temp.m_bl);
+}
+
+void CResult::SetTask(CAny any)
+{
+	m_any = std::move(any);
+	m_emaphore.post();
+}
+
+CAny CResult::Get()
+{
+	if (!m_bl) return "";
+	m_emaphore.wait();
+	return std::move(m_any);
 }

@@ -4,13 +4,16 @@
 #include <queue>
 #include <mutex>
 #include <atomic>
+#include <iostream>
 #include <condition_variable>
 #include <memory>
+#include <unordered_map>
 #include <functional>
 
 constexpr size_t INIT_THREAD_COUNT			= 10;		//默认初始化线程池线程数量
 constexpr size_t THRESHOLD					= 1024;		//默认任务最大阈值
 constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;		//默认线程池线程最大阈值
+constexpr int THREAD_MAX_IDLE_TIME			= 1;		//默认线程最大空闲时间s
 
 //cpp 17 Any类型
 class CAny
@@ -79,12 +82,22 @@ public:
 //线程类
 class CThread
 {
-	using FUNTYPE = std::function<void()>;
+	using FUNTYPE = std::function<void(int)>;
 public:
-	CThread(FUNTYPE parameter):m_callFun(parameter){}
+	CThread(FUNTYPE parameter):m_callFun(parameter), m_threadId(numbers++) 
+	{
+		std::cout << "create thread\n";
+	}
+	~CThread()
+	{
+		std::cout << "release thread\n";
+	}
 	void start();
+	int Getid()const;
 private:
 	FUNTYPE m_callFun;										//待执行函数对象
+	static int numbers;										//线程编号
+	int m_threadId;											//线程id
 };
 
 class CThreadPoll
@@ -95,13 +108,14 @@ private:
 	size_t									m_threadSizeThreshHold;//线程上限阙值
 	std::atomic_uint						m_taskSize;		//任务数量
 	CPollMode								m_mode;			//线程池模式
-	std::vector<std::unique_ptr<CThread>>	m_arr;			//线程队列
+	//std::vector<std::unique_ptr<CThread>>	m_arr;			//线程队列
+	std::unordered_map<int, std::unique_ptr<CThread>> m_arr;//线程队列
 	std::queue<std::shared_ptr<CTask>>		m_que;			//任务队列
 	std::atomic_bool						m_isConfirm;	//是否依旧确定
 	std::mutex								m_queMut;		//任务队列操作锁
 	std::condition_variable					m_notFull;		//任务队列不满
 	std::condition_variable					m_notEmpty;		//任务队列不空
-	std::atomic_int							m_idleThreadSize;//空闲线程数量
+	std::atomic_uint						m_idleThreadSize;//空闲线程数量
 	std::atomic_int							m_currThreadSize;//当前线程数量
 public:
 	void SetMode(CPollMode parameter);						//设置模式
@@ -109,7 +123,7 @@ public:
 	void Start(int count = INIT_THREAD_COUNT);				//开始
 	void SetTaskQueMaxThreshold(int threshhold);			//设置任务上限阙值
 	void SetThreadSizeThreshHold(size_t threshhold);		//设置线程上限阙值
-	void CallThreadFunction();								//线程执行函数
+	void CallThreadFunction(int);							//线程执行函数
 	CThreadPoll();
 	~CThreadPoll();
 };

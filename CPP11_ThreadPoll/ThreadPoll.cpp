@@ -10,37 +10,37 @@ void CThreadPoll::SetMode(CPollMode parameter)
 }
 
 // 给线程池提交任务    用户调用该接口，传入任务对象，生产任务
-CResult CThreadPoll::AddTask(std::shared_ptr<CTask> sp)
-{
-	std::unique_lock<std::mutex> lock(m_queMut);
-	//线程的通信  等待任务队列有空余   wait   wait_for   wait_until
-	// 用户提交任务，最长不能阻塞超过1s，否则判断提交任务失败，返回
-	bool res = m_notFull.wait_for(lock, std::chrono::seconds(1), 
-		[this]()->bool { return m_que.size() < m_taskMax; });
-	if (!res) 
-		// return task->getResult();  // Task  Result   线程执行完task，task对象就被析构掉了
-		return CResult(sp);
-	// 如果有空余，把任务放入任务队列中
-	m_que.emplace(sp);//添加任务
-	m_taskSize++;
-	// 因为新放了任务，任务队列肯定不空了，在notEmpty_上进行通知，赶快分配线程执行任务
-	m_notEmpty.notify_all();
-
-	// cached模式 任务处理比较紧急 场景：小而快的任务 需要根据任务数量和空闲线程的数量，判断是否需要创建新的线程出来
-	if (m_mode == CPollMode::MODE_CACHED				//动态方式
-		&& m_idleThreadSize < m_taskSize				//空闲线程小于任务线程
-		&& m_currThreadSize < m_threadSizeThreshHold)	//当前线程数量小于线程阈值
-	{
-		//创建新的线程对象
-		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPoll::CallThreadFunction, this, std::placeholders::_1));
-		thread->start();// 启动线程
-		m_arr.emplace(thread->Getid(), std::move(thread));
-		// 修改线程个数相关的变量
-		m_idleThreadSize++;		//空闲数量加一
-		m_currThreadSize++;		//线程总数量加一
-	}
-	return CResult(sp, true);// 返回任务的Result对象
-}
+//CResult CThreadPoll::AddTask(std::shared_ptr<CTask> sp)
+//{
+//	std::unique_lock<std::mutex> lock(m_queMut);
+//	//线程的通信  等待任务队列有空余   wait   wait_for   wait_until
+//	// 用户提交任务，最长不能阻塞超过1s，否则判断提交任务失败，返回
+//	bool res = m_notFull.wait_for(lock, std::chrono::seconds(1), 
+//		[this]()->bool { return m_que.size() < m_taskMax; });
+//	if (!res) 
+//		// return task->getResult();  // Task  Result   线程执行完task，task对象就被析构掉了
+//		return CResult(sp);
+//	// 如果有空余，把任务放入任务队列中
+//	m_que.emplace(sp);//添加任务
+//	m_taskSize++;
+//	// 因为新放了任务，任务队列肯定不空了，在notEmpty_上进行通知，赶快分配线程执行任务
+//	m_notEmpty.notify_all();
+//
+//	// cached模式 任务处理比较紧急 场景：小而快的任务 需要根据任务数量和空闲线程的数量，判断是否需要创建新的线程出来
+//	if (m_mode == CPollMode::MODE_CACHED				//动态方式
+//		&& m_idleThreadSize < m_taskSize				//空闲线程小于任务线程
+//		&& m_currThreadSize < m_threadSizeThreshHold)	//当前线程数量小于线程阈值
+//	{
+//		//创建新的线程对象
+//		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPoll::CallThreadFunction, this, std::placeholders::_1));
+//		thread->start();// 启动线程
+//		m_arr.emplace(thread->Getid(), std::move(thread));
+//		// 修改线程个数相关的变量
+//		m_idleThreadSize++;		//空闲数量加一
+//		m_currThreadSize++;		//线程总数量加一
+//	}
+//	return CResult(sp, true);// 返回任务的Result对象
+//}
 
 // 开启线程池
 void CThreadPoll::Start(int count)
@@ -84,7 +84,8 @@ void CThreadPoll::CallThreadFunction(int threadId)
 	auto lastTime = std::chrono::steady_clock::now();
 	while (m_taskSize != -1)// 所有任务必须执行完成，线程池才可以回收所有线程资源
 	{
-		std::shared_ptr<CTask> sp;
+		//std::shared_ptr<CTask> sp;
+		CTask sp;
 		{
 			std::unique_lock<std::mutex> lock(m_queMut);
 			if (m_mode == CPollMode::MODE_CACHED)
@@ -120,7 +121,7 @@ void CThreadPoll::CallThreadFunction(int threadId)
 			m_notFull.notify_all();
 		}//释放锁
 		if (sp != nullptr)
-			sp->exec();// 执行任务；把任务的返回值setVal方法给到Result
+			sp();// 执行任务；把任务的返回值setVal方法给到Result
 		m_idleThreadSize++;
 		lastTime = std::chrono::steady_clock::now();// 更新线程执行完任务的时间
 	}
@@ -157,34 +158,34 @@ int CThread::Getid() const
 	return m_threadId;
 }
 
-void CTask::setResult(CResult* p)
-{
-	m_result = p;
-}
+//void CTask::setResult(CResult* p)
+//{
+//	m_result = p;
+//}
 
-void CTask::exec()
-{
-	if (m_result != nullptr) {
-		m_result->SetTask(CallFunction());
-	}
-}
-
-CResult::CResult(const CResult& temp)
-{
-	m_sp = temp.m_sp;
-	m_any = std::move(const_cast<CResult*>(&temp)->m_any);
-	m_bl = temp.m_bl.load();
-}
-
-void CResult::SetTask(CAny any)
-{
-	m_any = std::move(any);
-	m_emaphore.post();
-}
-
-CAny CResult::Get()
-{
-	if (!m_bl) return "";
-	m_emaphore.wait();
-	return std::move(m_any);
-}
+//void CTask::exec()
+//{
+//	if (m_result != nullptr) {
+//		m_result->SetTask(CallFunction());
+//	}
+//}
+//
+//CResult::CResult(const CResult& temp)
+//{
+//	m_sp = temp.m_sp;
+//	m_any = std::move(const_cast<CResult*>(&temp)->m_any);
+//	m_bl = temp.m_bl.load();
+//}
+//
+//void CResult::SetTask(CAny any)
+//{
+//	m_any = std::move(any);
+//	m_emaphore.post();
+//}
+//
+//CAny CResult::Get()
+//{
+//	if (!m_bl) return "";
+//	m_emaphore.wait();
+//	return std::move(m_any);
+//}

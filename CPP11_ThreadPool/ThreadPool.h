@@ -11,20 +11,20 @@
 #include <future>
 #include <functional>
 
-constexpr size_t INIT_THREAD_COUNT			= 10;		//Ä¬ÈÏ³õÊ¼»¯Ïß³Ì³ØÏß³ÌÊıÁ¿
-constexpr size_t THRESHOLD					= 1024;		//Ä¬ÈÏÈÎÎñ×î´óãĞÖµ
-constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;		//Ä¬ÈÏÏß³Ì³ØÏß³Ì×î´óãĞÖµ
-constexpr int THREAD_MAX_IDLE_TIME			= 1;		//Ä¬ÈÏÏß³Ì×î´ó¿ÕÏĞÊ±¼äs
+constexpr size_t INIT_THREAD_COUNT			= 10;		//é»˜è®¤åˆå§‹åŒ–çº¿ç¨‹æ± çº¿ç¨‹æ•°é‡
+constexpr size_t THRESHOLD					= 1024;		//é»˜è®¤ä»»åŠ¡æœ€å¤§é˜ˆå€¼
+constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;		//é»˜è®¤çº¿ç¨‹æ± çº¿ç¨‹æœ€å¤§é˜ˆå€¼
+constexpr int THREAD_MAX_IDLE_TIME			= 1;		//é»˜è®¤çº¿ç¨‹æœ€å¤§ç©ºé—²æ—¶é—´s
 
 
-//Ïß³Ì³ØÄ£Ê½
-enum class CPollMode
+//çº¿ç¨‹æ± æ¨¡å¼
+enum class CPoolMode
 {
-	MODE_FIXED,		//¹Ì¶¨ÊıÁ¿
-	MODE_CACHED		//¶¯Ì¬ÊıÁ¿
+	MODE_FIXED,		//å›ºå®šæ•°é‡
+	MODE_CACHED		//åŠ¨æ€æ•°é‡
 };
 
-//Ïß³ÌÀà
+//çº¿ç¨‹ç±»
 class CThread
 {
 	using FUNTYPE = std::function<void(int)>;
@@ -40,32 +40,32 @@ public:
 	void start();
 	int Getid()const;
 private:
-	FUNTYPE m_callFun;										//´ıÖ´ĞĞº¯Êı¶ÔÏó
-	static int numbers;										//Ïß³Ì±àºÅ
-	int m_threadId;											//Ïß³Ìid
+	FUNTYPE m_callFun;										//å¾…æ‰§è¡Œå‡½æ•°å¯¹è±¡
+	static int numbers;										//çº¿ç¨‹ç¼–å·
+	int m_threadId;											//çº¿ç¨‹id
 };
 
-class CThreadPoll
+class CThreadPool
 {
 private:
-	size_t									m_count;		//³õÊ¼Ïß³ÌÊıÁ¿
-	size_t									m_taskMax;		//ÈÎÎñÉÏÏŞãÚÖµ
-	size_t									m_threadSizeThreshHold;//Ïß³ÌÉÏÏŞãÚÖµ
-	std::atomic_uint						m_taskSize;		//ÈÎÎñÊıÁ¿
-	CPollMode								m_mode;			//Ïß³Ì³ØÄ£Ê½
-	//std::vector<std::unique_ptr<CThread>>	m_arr;			//Ïß³Ì¶ÓÁĞ
-	std::unordered_map<int, std::unique_ptr<CThread>> m_arr;//Ïß³Ì¶ÓÁĞ
+	size_t									m_count;		//åˆå§‹çº¿ç¨‹æ•°é‡
+	size_t									m_taskMax;		//ä»»åŠ¡ä¸Šé™é˜™å€¼
+	size_t									m_threadSizeThreshHold;//çº¿ç¨‹ä¸Šé™é˜™å€¼
+	std::atomic_uint						m_taskSize;		//ä»»åŠ¡æ•°é‡
+	CPoolMode								m_mode;			//çº¿ç¨‹æ± æ¨¡å¼
+	//std::vector<std::unique_ptr<CThread>>	m_arr;			//çº¿ç¨‹é˜Ÿåˆ—
+	std::unordered_map<int, std::unique_ptr<CThread>> m_arr;//çº¿ç¨‹é˜Ÿåˆ—
 	using CTask = std::function<void()>;
-	std::queue<CTask>						m_que;			//ÈÎÎñ¶ÓÁĞ
-	std::atomic_bool						m_isConfirm;	//ÊÇ·ñÒÀ¾ÉÈ·¶¨
-	std::mutex								m_queMut;		//ÈÎÎñ¶ÓÁĞ²Ù×÷Ëø
-	std::condition_variable					m_notFull;		//ÈÎÎñ¶ÓÁĞ²»Âú
-	std::condition_variable					m_notEmpty;		//ÈÎÎñ¶ÓÁĞ²»¿Õ
-	std::atomic_uint						m_idleThreadSize;//¿ÕÏĞÏß³ÌÊıÁ¿
-	std::atomic_int							m_currThreadSize;//µ±Ç°Ïß³ÌÊıÁ¿
+	std::queue<CTask>						m_que;			//ä»»åŠ¡é˜Ÿåˆ—
+	std::atomic_bool						m_isConfirm;	//æ˜¯å¦ä¾æ—§ç¡®å®š
+	std::mutex								m_queMut;		//ä»»åŠ¡é˜Ÿåˆ—æ“ä½œé”
+	std::condition_variable					m_notFull;		//ä»»åŠ¡é˜Ÿåˆ—ä¸æ»¡
+	std::condition_variable					m_notEmpty;		//ä»»åŠ¡é˜Ÿåˆ—ä¸ç©º
+	std::atomic_uint						m_idleThreadSize;//ç©ºé—²çº¿ç¨‹æ•°é‡
+	std::atomic_int							m_currThreadSize;//å½“å‰çº¿ç¨‹æ•°é‡
 public:
-	void SetMode(CPollMode parameter);						//ÉèÖÃÄ£Ê½
-	//CResult AddTask(std::shared_ptr<CTask>);				//Ìí¼ÓÈÎÎñ
+	void SetMode(CPoolMode parameter);						//è®¾ç½®æ¨¡å¼
+	//CResult AddTask(std::shared_ptr<CTask>);				//æ·»åŠ ä»»åŠ¡
 	template<typename Func, typename... Args>
 	auto AddTask(Func&& func, Args&&... args) -> std::future<decltype(func(args...))>
 	{
@@ -76,8 +76,8 @@ public:
 
 
 		std::unique_lock<std::mutex> lock(m_queMut);
-		//Ïß³ÌµÄÍ¨ĞÅ  µÈ´ıÈÎÎñ¶ÓÁĞÓĞ¿ÕÓà   wait   wait_for   wait_until
-		// ÓÃ»§Ìá½»ÈÎÎñ£¬×î³¤²»ÄÜ×èÈû³¬¹ı1s£¬·ñÔòÅĞ¶ÏÌá½»ÈÎÎñÊ§°Ü£¬·µ»Ø
+		//çº¿ç¨‹çš„é€šä¿¡  ç­‰å¾…ä»»åŠ¡é˜Ÿåˆ—æœ‰ç©ºä½™   wait   wait_for   wait_until
+		// ç”¨æˆ·æäº¤ä»»åŠ¡ï¼Œæœ€é•¿ä¸èƒ½é˜»å¡è¶…è¿‡1sï¼Œå¦åˆ™åˆ¤æ–­æäº¤ä»»åŠ¡å¤±è´¥ï¼Œè¿”å›
 		bool res = m_notFull.wait_for(lock, std::chrono::seconds(1),
 			[this]()->bool { return m_que.size() < m_taskMax; });
 		if (!res){
@@ -88,65 +88,65 @@ public:
 			return _task->get_future();
 		}
 			
-		// Èç¹ûÓĞ¿ÕÓà£¬°ÑÈÎÎñ·ÅÈëÈÎÎñ¶ÓÁĞÖĞ
-		//m_que.emplace(sp);//Ìí¼ÓÈÎÎñ
+		// å¦‚æœæœ‰ç©ºä½™ï¼ŒæŠŠä»»åŠ¡æ”¾å…¥ä»»åŠ¡é˜Ÿåˆ—ä¸­
+		//m_que.emplace(sp);//æ·»åŠ ä»»åŠ¡
 		m_que.emplace([task]() {(*task)(); });
 		m_taskSize++;
-		// ÒòÎªĞÂ·ÅÁËÈÎÎñ£¬ÈÎÎñ¶ÓÁĞ¿Ï¶¨²»¿ÕÁË£¬ÔÚnotEmpty_ÉÏ½øĞĞÍ¨Öª£¬¸Ï¿ì·ÖÅäÏß³ÌÖ´ĞĞÈÎÎñ
+		// å› ä¸ºæ–°æ”¾äº†ä»»åŠ¡ï¼Œä»»åŠ¡é˜Ÿåˆ—è‚¯å®šä¸ç©ºäº†ï¼Œåœ¨notEmpty_ä¸Šè¿›è¡Œé€šçŸ¥ï¼Œèµ¶å¿«åˆ†é…çº¿ç¨‹æ‰§è¡Œä»»åŠ¡
 		m_notEmpty.notify_all();
 
-		// cachedÄ£Ê½ ÈÎÎñ´¦Àí±È½Ï½ô¼± ³¡¾°£ºĞ¡¶ø¿ìµÄÈÎÎñ ĞèÒª¸ù¾İÈÎÎñÊıÁ¿ºÍ¿ÕÏĞÏß³ÌµÄÊıÁ¿£¬ÅĞ¶ÏÊÇ·ñĞèÒª´´½¨ĞÂµÄÏß³Ì³öÀ´
-		if (m_mode == CPollMode::MODE_CACHED				//¶¯Ì¬·½Ê½
-			&& m_idleThreadSize < m_taskSize				//¿ÕÏĞÏß³ÌĞ¡ÓÚÈÎÎñÏß³Ì
-			&& m_currThreadSize < m_threadSizeThreshHold)	//µ±Ç°Ïß³ÌÊıÁ¿Ğ¡ÓÚÏß³ÌãĞÖµ
+		// cachedæ¨¡å¼ ä»»åŠ¡å¤„ç†æ¯”è¾ƒç´§æ€¥ åœºæ™¯ï¼šå°è€Œå¿«çš„ä»»åŠ¡ éœ€è¦æ ¹æ®ä»»åŠ¡æ•°é‡å’Œç©ºé—²çº¿ç¨‹çš„æ•°é‡ï¼Œåˆ¤æ–­æ˜¯å¦éœ€è¦åˆ›å»ºæ–°çš„çº¿ç¨‹å‡ºæ¥
+		if (m_mode == CPoolMode::MODE_CACHED				//åŠ¨æ€æ–¹å¼
+			&& m_idleThreadSize < m_taskSize				//ç©ºé—²çº¿ç¨‹å°äºä»»åŠ¡çº¿ç¨‹
+			&& m_currThreadSize < m_threadSizeThreshHold)	//å½“å‰çº¿ç¨‹æ•°é‡å°äºçº¿ç¨‹é˜ˆå€¼
 		{
-			//´´½¨ĞÂµÄÏß³Ì¶ÔÏó
-			std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPoll::CallThreadFunction, this, std::placeholders::_1));
-			thread->start();// Æô¶¯Ïß³Ì
+			//åˆ›å»ºæ–°çš„çº¿ç¨‹å¯¹è±¡
+			std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPool::CallThreadFunction, this, std::placeholders::_1));
+			thread->start();// å¯åŠ¨çº¿ç¨‹
 			m_arr.emplace(thread->Getid(), std::move(thread));
-			// ĞŞ¸ÄÏß³Ì¸öÊıÏà¹ØµÄ±äÁ¿
-			m_idleThreadSize++;		//¿ÕÏĞÊıÁ¿¼ÓÒ»
-			m_currThreadSize++;		//Ïß³Ì×ÜÊıÁ¿¼ÓÒ»
+			// ä¿®æ”¹çº¿ç¨‹ä¸ªæ•°ç›¸å…³çš„å˜é‡
+			m_idleThreadSize++;		//ç©ºé—²æ•°é‡åŠ ä¸€
+			m_currThreadSize++;		//çº¿ç¨‹æ€»æ•°é‡åŠ ä¸€
 		}
-		return result;// ·µ»ØÈÎÎñµÄResult¶ÔÏó
+		return result;// è¿”å›ä»»åŠ¡çš„Resultå¯¹è±¡
 	}
 
-	void Start(int count = INIT_THREAD_COUNT);				//¿ªÊ¼
-	void SetTaskQueMaxThreshold(int threshhold);			//ÉèÖÃÈÎÎñÉÏÏŞãÚÖµ
-	void SetThreadSizeThreshHold(size_t threshhold);		//ÉèÖÃÏß³ÌÉÏÏŞãÚÖµ
-	void CallThreadFunction(int);							//Ïß³ÌÖ´ĞĞº¯Êı
-	CThreadPoll();
-	~CThreadPoll();
+	void Start(int count = INIT_THREAD_COUNT);				//å¼€å§‹
+	void SetTaskQueMaxThreshold(int threshhold);			//è®¾ç½®ä»»åŠ¡ä¸Šé™é˜™å€¼
+	void SetThreadSizeThreshHold(size_t threshhold);		//è®¾ç½®çº¿ç¨‹ä¸Šé™é˜™å€¼
+	void CallThreadFunction(int);							//çº¿ç¨‹æ‰§è¡Œå‡½æ•°
+	CThreadPool();
+	~CThreadPool();
 };
 
 
 /*
 class CResult;
-//ÈÎÎñÀà
+//ä»»åŠ¡ç±»
 class CTask
 {
 private:
-	//ÈÎÎñ½á¹ûÖ¸Õë
+	//ä»»åŠ¡ç»“æœæŒ‡é’ˆ
 	CResult* m_result = nullptr;
 public:
-	//ÉèÖÃÈÎÎñ½á¹û
+	//è®¾ç½®ä»»åŠ¡ç»“æœ
 	void setResult(CResult* p);
 	virtual CAny CallFunction() { return nullptr; }
-	//Ö´ĞĞÈÎÎñ
+	//æ‰§è¡Œä»»åŠ¡
 	void exec();
 };
 
-//cpp 17 AnyÀàĞÍ
+//cpp 17 Anyç±»å‹
 class CAny
 {
 private:
-	//»ùÀà
+	//åŸºç±»
 	class BASE {
 	public:
 		virtual ~BASE() = default;
 	};
 
-	//ÅÉÉúÀà
+	//æ´¾ç”Ÿç±»
 	template <typename T>
 	class CDerive : public BASE
 	{
@@ -164,36 +164,36 @@ public:
 	CAny(const CAny&) = delete;
 	CAny(CAny&&) = default;
 
-	//»ñÈ¡·µ»Ø½á¹û
+	//è·å–è¿”å›ç»“æœ
 	template <typename T>
 	T cast()
 	{
 		CDerive<T>* p = dynamic_cast<CDerive<T>*>(m_data.get());
 		if (p == nullptr)
-			throw "ÀàĞÍ²»Æ¥Åä£¬×ª»»Ê§°Ü";
+			throw "ç±»å‹ä¸åŒ¹é…ï¼Œè½¬æ¢å¤±è´¥";
 		return p->data;
 	}
 private:
-	//´æ´¢½á¹ûµÄ»ùÀàÖ¸Õë
+	//å­˜å‚¨ç»“æœçš„åŸºç±»æŒ‡é’ˆ
 	std::unique_ptr<BASE> m_data;
 };
 
-//ĞÅºÅÁ¿
+//ä¿¡å·é‡
 class emaphore
 {
 private:
 	std::mutex					m_mutex;
 	std::condition_variable		m_CV;
-	size_t						count;						//ĞÅºÅÁ¿
+	size_t						count;						//ä¿¡å·é‡
 public:
 	emaphore(size_t _count = 0) :count(_count) {}
-	//»ñÈ¡Ò»¸öĞÅºÅ
+	//è·å–ä¸€ä¸ªä¿¡å·
 	void wait() {
 		std::unique_lock<std::mutex> lock(m_mutex);
 		m_CV.wait(lock, [this]()->bool {return count > 0; });
 		count--;
 	}
-	//Í¶ÈëÒ»¸öĞÅºÅ
+	//æŠ•å…¥ä¸€ä¸ªä¿¡å·
 	void post()
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);
@@ -202,19 +202,19 @@ public:
 	}
 };
 
-//½á¹ûÀà
+//ç»“æœç±»
 class CResult
 {
 private:
-	CAny						m_any;			//½á¹ûÖµ
-	std::atomic_bool			m_bl;			//ÊÇ·ñÓĞĞ§
-	std::shared_ptr<CTask>		m_sp;			//ÈÎÎñÖ¸Õë
+	CAny						m_any;			//ç»“æœå€¼
+	std::atomic_bool			m_bl;			//æ˜¯å¦æœ‰æ•ˆ
+	std::shared_ptr<CTask>		m_sp;			//ä»»åŠ¡æŒ‡é’ˆ
 public:
 	CResult(std::shared_ptr<CTask> sp, bool isValue = false) :m_sp(sp), m_bl(isValue) { m_sp->setResult(this); }
 	CResult(const CResult& val);
 	~CResult() = default;
-	void SetTask(CAny any);						//ÉèÖÃ½á¹û
-	CAny Get();									//»ñÈ¡½á¹û
-	emaphore					m_emaphore;		//Ïß³ÌÍ¨Öª
+	void SetTask(CAny any);						//è®¾ç½®ç»“æœ
+	CAny Get();									//è·å–ç»“æœ
+	emaphore					m_emaphore;		//çº¿ç¨‹é€šçŸ¥
 };
 */

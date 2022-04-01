@@ -14,7 +14,7 @@
 constexpr size_t INIT_THREAD_COUNT			= 10;		//默认初始化线程池线程数量
 constexpr size_t THRESHOLD					= 1024;		//默认任务最大阈值
 constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;		//默认线程池线程最大阈值
-constexpr int THREAD_MAX_IDLE_TIME			= 1;		//默认线程最大空闲时间s
+constexpr int THREAD_MAX_IDLE_TIME			= 60;		//默认线程最大空闲时间s
 
 
 //线程池模式

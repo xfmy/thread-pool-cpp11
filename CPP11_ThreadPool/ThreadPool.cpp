@@ -1,62 +1,62 @@
-#include "ThreadPoll.h"
+#include "ThreadPool.h"
 #include <iostream>
 int CThread::numbers = 0;
 
-// ÉèÖÃÏß³Ì³ØµÄ¹¤×÷Ä£Ê½
-void CThreadPoll::SetMode(CPollMode parameter)
+// è®¾ç½®çº¿ç¨‹æ± çš„å·¥ä½œæ¨¡å¼
+void CThreadPool::SetMode(CPollMode parameter)
 {
 	if(!m_isConfirm)
 		m_mode = parameter;
 }
 
-// ¸øÏß³Ì³ØÌá½»ÈÎÎñ    ÓÃ»§µ÷ÓÃ¸Ã½Ó¿Ú£¬´«ÈëÈÎÎñ¶ÔÏó£¬Éú²úÈÎÎñ
-//CResult CThreadPoll::AddTask(std::shared_ptr<CTask> sp)
+// ç»™çº¿ç¨‹æ± æäº¤ä»»åŠ¡    ç”¨æˆ·è°ƒç”¨è¯¥æ¥å£ï¼Œä¼ å…¥ä»»åŠ¡å¯¹è±¡ï¼Œç”Ÿäº§ä»»åŠ¡
+//CResult CThreadPool::AddTask(std::shared_ptr<CTask> sp)
 //{
 //	std::unique_lock<std::mutex> lock(m_queMut);
-//	//Ïß³ÌµÄÍ¨ĞÅ  µÈ´ıÈÎÎñ¶ÓÁĞÓĞ¿ÕÓà   wait   wait_for   wait_until
-//	// ÓÃ»§Ìá½»ÈÎÎñ£¬×î³¤²»ÄÜ×èÈû³¬¹ı1s£¬·ñÔòÅĞ¶ÏÌá½»ÈÎÎñÊ§°Ü£¬·µ»Ø
+//	//çº¿ç¨‹çš„é€šä¿¡  ç­‰å¾…ä»»åŠ¡é˜Ÿåˆ—æœ‰ç©ºä½™   wait   wait_for   wait_until
+//	// ç”¨æˆ·æäº¤ä»»åŠ¡ï¼Œæœ€é•¿ä¸èƒ½é˜»å¡è¶…è¿‡1sï¼Œå¦åˆ™åˆ¤æ–­æäº¤ä»»åŠ¡å¤±è´¥ï¼Œè¿”å›
 //	bool res = m_notFull.wait_for(lock, std::chrono::seconds(1), 
 //		[this]()->bool { return m_que.size() < m_taskMax; });
 //	if (!res) 
-//		// return task->getResult();  // Task  Result   Ïß³ÌÖ´ĞĞÍêtask£¬task¶ÔÏó¾Í±»Îö¹¹µôÁË
+//		// return task->getResult();  // Task  Result   çº¿ç¨‹æ‰§è¡Œå®Œtaskï¼Œtaskå¯¹è±¡å°±è¢«ææ„æ‰äº†
 //		return CResult(sp);
-//	// Èç¹ûÓĞ¿ÕÓà£¬°ÑÈÎÎñ·ÅÈëÈÎÎñ¶ÓÁĞÖĞ
-//	m_que.emplace(sp);//Ìí¼ÓÈÎÎñ
+//	// å¦‚æœæœ‰ç©ºä½™ï¼ŒæŠŠä»»åŠ¡æ”¾å…¥ä»»åŠ¡é˜Ÿåˆ—ä¸­
+//	m_que.emplace(sp);//æ·»åŠ ä»»åŠ¡
 //	m_taskSize++;
-//	// ÒòÎªĞÂ·ÅÁËÈÎÎñ£¬ÈÎÎñ¶ÓÁĞ¿Ï¶¨²»¿ÕÁË£¬ÔÚnotEmpty_ÉÏ½øĞĞÍ¨Öª£¬¸Ï¿ì·ÖÅäÏß³ÌÖ´ĞĞÈÎÎñ
+//	// å› ä¸ºæ–°æ”¾äº†ä»»åŠ¡ï¼Œä»»åŠ¡é˜Ÿåˆ—è‚¯å®šä¸ç©ºäº†ï¼Œåœ¨notEmpty_ä¸Šè¿›è¡Œé€šçŸ¥ï¼Œèµ¶å¿«åˆ†é…çº¿ç¨‹æ‰§è¡Œä»»åŠ¡
 //	m_notEmpty.notify_all();
 //
-//	// cachedÄ£Ê½ ÈÎÎñ´¦Àí±È½Ï½ô¼± ³¡¾°£ºĞ¡¶ø¿ìµÄÈÎÎñ ĞèÒª¸ù¾İÈÎÎñÊıÁ¿ºÍ¿ÕÏĞÏß³ÌµÄÊıÁ¿£¬ÅĞ¶ÏÊÇ·ñĞèÒª´´½¨ĞÂµÄÏß³Ì³öÀ´
-//	if (m_mode == CPollMode::MODE_CACHED				//¶¯Ì¬·½Ê½
-//		&& m_idleThreadSize < m_taskSize				//¿ÕÏĞÏß³ÌĞ¡ÓÚÈÎÎñÏß³Ì
-//		&& m_currThreadSize < m_threadSizeThreshHold)	//µ±Ç°Ïß³ÌÊıÁ¿Ğ¡ÓÚÏß³ÌãĞÖµ
+//	// cachedæ¨¡å¼ ä»»åŠ¡å¤„ç†æ¯”è¾ƒç´§æ€¥ åœºæ™¯ï¼šå°è€Œå¿«çš„ä»»åŠ¡ éœ€è¦æ ¹æ®ä»»åŠ¡æ•°é‡å’Œç©ºé—²çº¿ç¨‹çš„æ•°é‡ï¼Œåˆ¤æ–­æ˜¯å¦éœ€è¦åˆ›å»ºæ–°çš„çº¿ç¨‹å‡ºæ¥
+//	if (m_mode == CPollMode::MODE_CACHED				//åŠ¨æ€æ–¹å¼
+//		&& m_idleThreadSize < m_taskSize				//ç©ºé—²çº¿ç¨‹å°äºä»»åŠ¡çº¿ç¨‹
+//		&& m_currThreadSize < m_threadSizeThreshHold)	//å½“å‰çº¿ç¨‹æ•°é‡å°äºçº¿ç¨‹é˜ˆå€¼
 //	{
-//		//´´½¨ĞÂµÄÏß³Ì¶ÔÏó
-//		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPoll::CallThreadFunction, this, std::placeholders::_1));
-//		thread->start();// Æô¶¯Ïß³Ì
+//		//åˆ›å»ºæ–°çš„çº¿ç¨‹å¯¹è±¡
+//		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPool::CallThreadFunction, this, std::placeholders::_1));
+//		thread->start();// å¯åŠ¨çº¿ç¨‹
 //		m_arr.emplace(thread->Getid(), std::move(thread));
-//		// ĞŞ¸ÄÏß³Ì¸öÊıÏà¹ØµÄ±äÁ¿
-//		m_idleThreadSize++;		//¿ÕÏĞÊıÁ¿¼ÓÒ»
-//		m_currThreadSize++;		//Ïß³Ì×ÜÊıÁ¿¼ÓÒ»
+//		// ä¿®æ”¹çº¿ç¨‹ä¸ªæ•°ç›¸å…³çš„å˜é‡
+//		m_idleThreadSize++;		//ç©ºé—²æ•°é‡åŠ ä¸€
+//		m_currThreadSize++;		//çº¿ç¨‹æ€»æ•°é‡åŠ ä¸€
 //	}
-//	return CResult(sp, true);// ·µ»ØÈÎÎñµÄResult¶ÔÏó
+//	return CResult(sp, true);// è¿”å›ä»»åŠ¡çš„Resultå¯¹è±¡
 //}
 
-// ¿ªÆôÏß³Ì³Ø
-void CThreadPoll::Start(int count)
+// å¼€å¯çº¿ç¨‹æ± 
+void CThreadPool::Start(int count)
 {
-	m_isConfirm = true;// ÉèÖÃÏß³Ì³ØµÄÔËĞĞ×´Ì¬
-	// ¼ÇÂ¼³õÊ¼Ïß³Ì¸öÊı
+	m_isConfirm = true;// è®¾ç½®çº¿ç¨‹æ± çš„è¿è¡ŒçŠ¶æ€
+	// è®°å½•åˆå§‹çº¿ç¨‹ä¸ªæ•°
 	m_count = count;
 	m_currThreadSize = count;
-	// ´´½¨Ïß³Ì¶ÔÏó
+	// åˆ›å»ºçº¿ç¨‹å¯¹è±¡
 	for (size_t i = 0; i < m_count; i++)
 	{
-		// ´´½¨threadÏß³Ì¶ÔÏóµÄÊ±ºò£¬°ÑÏß³Ìº¯Êı¸øµ½threadÏß³Ì¶ÔÏó
-		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPoll::CallThreadFunction, this, std::placeholders::_1));
+		// åˆ›å»ºthreadçº¿ç¨‹å¯¹è±¡çš„æ—¶å€™ï¼ŒæŠŠçº¿ç¨‹å‡½æ•°ç»™åˆ°threadçº¿ç¨‹å¯¹è±¡
+		std::unique_ptr<CThread> thread = std::make_unique<CThread>(std::bind(&CThreadPool::CallThreadFunction, this, std::placeholders::_1));
 		m_arr.emplace(thread->Getid(),std::move(thread));
 	}
-	// Æô¶¯ËùÓĞÏß³Ì 
+	// å¯åŠ¨æ‰€æœ‰çº¿ç¨‹ 
 	for (int i = 0; i < m_count; i++)
 	{
 		m_arr[i]->start();
@@ -64,25 +64,25 @@ void CThreadPoll::Start(int count)
 	}
 }
 
-// ÉèÖÃtaskÈÎÎñ¶ÓÁĞÉÏÏßãĞÖµ
-void CThreadPoll::SetTaskQueMaxThreshold(int threshhold)
+// è®¾ç½®taskä»»åŠ¡é˜Ÿåˆ—ä¸Šçº¿é˜ˆå€¼
+void CThreadPool::SetTaskQueMaxThreshold(int threshhold)
 {
 	if(!m_isConfirm)
 		m_taskMax = threshhold;
 }
 
-// ÉèÖÃÏß³Ì³ØcachedÄ£Ê½ÏÂÏß³ÌãĞÖµ
-void CThreadPoll::SetThreadSizeThreshHold(size_t threshhold)
+// è®¾ç½®çº¿ç¨‹æ± cachedæ¨¡å¼ä¸‹çº¿ç¨‹é˜ˆå€¼
+void CThreadPool::SetThreadSizeThreshHold(size_t threshhold)
 {
 	if (!m_isConfirm && m_mode == CPollMode::MODE_CACHED)
 		m_threadSizeThreshHold = threshhold;
 }
 
-// ¶¨ÒåÏß³Ìº¯Êı   Ïß³Ì³ØµÄËùÓĞÏß³Ì´ÓÈÎÎñ¶ÓÁĞÀïÃæÏû·ÑÈÎÎñ
-void CThreadPoll::CallThreadFunction(int threadId)
+// å®šä¹‰çº¿ç¨‹å‡½æ•°   çº¿ç¨‹æ± çš„æ‰€æœ‰çº¿ç¨‹ä»ä»»åŠ¡é˜Ÿåˆ—é‡Œé¢æ¶ˆè´¹ä»»åŠ¡
+void CThreadPool::CallThreadFunction(int threadId)
 {
 	auto lastTime = std::chrono::steady_clock::now();
-	while (m_taskSize != -1)// ËùÓĞÈÎÎñ±ØĞëÖ´ĞĞÍê³É£¬Ïß³Ì³Ø²Å¿ÉÒÔ»ØÊÕËùÓĞÏß³Ì×ÊÔ´
+	while (m_taskSize != -1)// æ‰€æœ‰ä»»åŠ¡å¿…é¡»æ‰§è¡Œå®Œæˆï¼Œçº¿ç¨‹æ± æ‰å¯ä»¥å›æ”¶æ‰€æœ‰çº¿ç¨‹èµ„æº
 	{
 		//std::shared_ptr<CTask> sp;
 		CTask sp;
@@ -98,36 +98,36 @@ void CThreadPoll::CallThreadFunction(int threadId)
 						if (time.count() > THREAD_MAX_IDLE_TIME && m_currThreadSize > m_count)
 						{
 							m_arr.erase(threadId);
-							m_idleThreadSize--;		//¿ÕÏĞÊıÁ¿¼õÒ»
-							m_currThreadSize--;		//Ïß³Ì×ÜÊıÁ¿¼õÒ»
+							m_idleThreadSize--;		//ç©ºé—²æ•°é‡å‡ä¸€
+							m_currThreadSize--;		//çº¿ç¨‹æ€»æ•°é‡å‡ä¸€
 							return;
 						}
 					}
 				}
 			}
 			else {
-				// µÈ´ınotEmptyÌõ¼ş
+				// ç­‰å¾…notEmptyæ¡ä»¶
 				m_notEmpty.wait(lock, [this]()->bool {return !m_que.empty(); });
 			}
 			m_idleThreadSize--;
-			// ´ÓÈÎÎñ¶ÓÁĞÖÖÈ¡Ò»¸öÈÎÎñ³öÀ´
+			// ä»ä»»åŠ¡é˜Ÿåˆ—ç§å–ä¸€ä¸ªä»»åŠ¡å‡ºæ¥
 			sp = m_que.front();
 			m_que.pop();
 			m_taskSize--;
-			// Èç¹ûÒÀÈ»ÓĞÊ£ÓàÈÎÎñ£¬¼ÌĞøÍ¨ÖªÆäËüµÃÏß³ÌÖ´ĞĞÈÎÎñ
+			// å¦‚æœä¾ç„¶æœ‰å‰©ä½™ä»»åŠ¡ï¼Œç»§ç»­é€šçŸ¥å…¶å®ƒå¾—çº¿ç¨‹æ‰§è¡Œä»»åŠ¡
 			if (!m_que.empty())
 				m_notEmpty.notify_all();
-			// È¡³öÒ»¸öÈÎÎñ£¬½øĞĞÍ¨Öª£¬Í¨Öª¿ÉÒÔ¼ÌĞøÌá½»Éú²úÈÎÎñ
+			// å–å‡ºä¸€ä¸ªä»»åŠ¡ï¼Œè¿›è¡Œé€šçŸ¥ï¼Œé€šçŸ¥å¯ä»¥ç»§ç»­æäº¤ç”Ÿäº§ä»»åŠ¡
 			m_notFull.notify_all();
-		}//ÊÍ·ÅËø
+		}//é‡Šæ”¾é”
 		if (sp != nullptr)
-			sp();// Ö´ĞĞÈÎÎñ£»°ÑÈÎÎñµÄ·µ»ØÖµsetVal·½·¨¸øµ½Result
+			sp();// æ‰§è¡Œä»»åŠ¡ï¼›æŠŠä»»åŠ¡çš„è¿”å›å€¼setValæ–¹æ³•ç»™åˆ°Result
 		m_idleThreadSize++;
-		lastTime = std::chrono::steady_clock::now();// ¸üĞÂÏß³ÌÖ´ĞĞÍêÈÎÎñµÄÊ±¼ä
+		lastTime = std::chrono::steady_clock::now();// æ›´æ–°çº¿ç¨‹æ‰§è¡Œå®Œä»»åŠ¡çš„æ—¶é—´
 	}
 }
-// Ïß³Ì³Ø¹¹Ôì
-CThreadPoll::CThreadPoll()
+// çº¿ç¨‹æ± æ„é€ 
+CThreadPool::CThreadPool()
 	:m_count(INIT_THREAD_COUNT)
 	, m_taskMax(THRESHOLD)
 	, m_taskSize(0)
@@ -139,7 +139,7 @@ CThreadPoll::CThreadPoll()
 {
 }
 
-CThreadPoll::~CThreadPoll()
+CThreadPool::~CThreadPool()
 {
 	m_taskSize = -1;
 }

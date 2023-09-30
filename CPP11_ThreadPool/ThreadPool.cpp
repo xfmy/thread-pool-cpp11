@@ -116,9 +116,9 @@ void CThreadPool::CallThreadFunction(int threadId)
 			m_taskSize--;
 			// 如果依然有剩余任务，继续通知其它得线程执行任务
 			if (!m_que.empty())
-				m_notEmpty.notify_all();
+				m_notEmpty.notify_one();
 			// 取出一个任务，进行通知，通知可以继续提交生产任务
-			m_notFull.notify_all();
+			m_notFull.notify_one();
 		}//释放锁
 		if (sp != nullptr)
 			sp();// 执行任务；把任务的返回值setVal方法给到Result

@@ -93,7 +93,7 @@ public:
 		m_que.emplace([task]() {(*task)(); });
 		m_taskSize++;
 		// 因为新放了任务，任务队列肯定不空了，在notEmpty_上进行通知，赶快分配线程执行任务
-		m_notEmpty.notify_all();
+		m_notEmpty.notify_one();
 
 		// cached模式 任务处理比较紧急 场景：小而快的任务 需要根据任务数量和空闲线程的数量，判断是否需要创建新的线程出来
 		if (m_mode == CPoolMode::MODE_CACHED				//动态方式

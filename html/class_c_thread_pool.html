@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>doxygen demo: CThreadPool类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="112199805_p0_master1200.webp"/></td>
+  <td id="projectalign">
+   <div id="projectname">doxygen demo<span id="projectnumber">&#160;1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="class_c_thread_pool-members.html">所有成员列表</a>  </div>
+  <div class="headertitle"><div class="title">CThreadPool类 参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）  
+ <a href="class_c_thread_pool.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_thread_pool_8h_source.html">ThreadPool.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a99e6fc8eab3ba2d6c0d018f33e7251bc" id="r_a99e6fc8eab3ba2d6c0d018f33e7251bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#a99e6fc8eab3ba2d6c0d018f33e7251bc">SetMode</a> (<a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a> parameter)</td></tr>
+<tr class="memdesc:a99e6fc8eab3ba2d6c0d018f33e7251bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">设置线程池模式  <br /></td></tr>
+<tr class="separator:a99e6fc8eab3ba2d6c0d018f33e7251bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae13d087eb4a574e0de57e76b02590989" id="r_ae13d087eb4a574e0de57e76b02590989"><td class="memTemplParams" colspan="2">template&lt;typename Func , typename... Args&gt; </td></tr>
+<tr class="memitem:ae13d087eb4a574e0de57e76b02590989"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#ae13d087eb4a574e0de57e76b02590989">AddTask</a> (Func &amp;&amp;func, Args &amp;&amp;... args) -&gt; std::future&lt; decltype(func(args...))&gt;</td></tr>
+<tr class="memdesc:ae13d087eb4a574e0de57e76b02590989"><td class="mdescLeft">&#160;</td><td class="mdescRight">线程池添加任务模板函数  <br /></td></tr>
+<tr class="separator:ae13d087eb4a574e0de57e76b02590989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd56220d60c65044eec97c86398a578e" id="r_acd56220d60c65044eec97c86398a578e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#acd56220d60c65044eec97c86398a578e">Start</a> (int count=<a class="el" href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">INIT_THREAD_COUNT</a>)</td></tr>
+<tr class="memdesc:acd56220d60c65044eec97c86398a578e"><td class="mdescLeft">&#160;</td><td class="mdescRight">启动线程池  <br /></td></tr>
+<tr class="separator:acd56220d60c65044eec97c86398a578e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7761122293f52232f13da649bbe892a5" id="r_a7761122293f52232f13da649bbe892a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#a7761122293f52232f13da649bbe892a5">SetTaskQueMaxThreshold</a> (int threshhold)</td></tr>
+<tr class="memdesc:a7761122293f52232f13da649bbe892a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">设置任务上限阙值  <br /></td></tr>
+<tr class="separator:a7761122293f52232f13da649bbe892a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c191ed9d4869f84bfb37c3401b47388" id="r_a7c191ed9d4869f84bfb37c3401b47388"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#a7c191ed9d4869f84bfb37c3401b47388">SetThreadSizeThreshHold</a> (size_t threshhold)</td></tr>
+<tr class="memdesc:a7c191ed9d4869f84bfb37c3401b47388"><td class="mdescLeft">&#160;</td><td class="mdescRight">设置线程上限阙值  <br /></td></tr>
+<tr class="separator:a7c191ed9d4869f84bfb37c3401b47388"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdab417f212176a49e0f9902064dfc07" id="r_abdab417f212176a49e0f9902064dfc07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html#abdab417f212176a49e0f9902064dfc07">CallThreadFunction</a> (int)</td></tr>
+<tr class="memdesc:abdab417f212176a49e0f9902064dfc07"><td class="mdescLeft">&#160;</td><td class="mdescRight">线程执行函数  <br /></td></tr>
+<tr class="separator:abdab417f212176a49e0f9902064dfc07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量） </p>
+</div><h2 class="groupheader">成员函数说明</h2>
+<a id="ae13d087eb4a574e0de57e76b02590989" name="ae13d087eb4a574e0de57e76b02590989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae13d087eb4a574e0de57e76b02590989">&#9670;&#160;</a></span>AddTask()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Func , typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto CThreadPool::AddTask </td>
+          <td>(</td>
+          <td class="paramtype">Func &amp;&amp;&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; std::future&lt;decltype(func(args...))&gt;
+</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>线程池添加任务模板函数 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>函数对象 </td></tr>
+    <tr><td class="paramname">args</td><td>函数参数(不定量) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>返回一个future,其内包装了函数的返回值 </dd></dl>
+
+</div>
+</div>
+<a id="abdab417f212176a49e0f9902064dfc07" name="abdab417f212176a49e0f9902064dfc07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdab417f212176a49e0f9902064dfc07">&#9670;&#160;</a></span>CallThreadFunction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CThreadPool::CallThreadFunction </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>threadId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>线程执行函数 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">线程编号</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a99e6fc8eab3ba2d6c0d018f33e7251bc" name="a99e6fc8eab3ba2d6c0d018f33e7251bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99e6fc8eab3ba2d6c0d018f33e7251bc">&#9670;&#160;</a></span>SetMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CThreadPool::SetMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a>&#160;</td>
+          <td class="paramname"><em>parameter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>设置线程池模式 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameter</td><td>CPoolMode枚举类型 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7761122293f52232f13da649bbe892a5" name="a7761122293f52232f13da649bbe892a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7761122293f52232f13da649bbe892a5">&#9670;&#160;</a></span>SetTaskQueMaxThreshold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CThreadPool::SetTaskQueMaxThreshold </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>threshhold</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>设置任务上限阙值 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">threshhold</td><td>阙值数值 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7c191ed9d4869f84bfb37c3401b47388" name="a7c191ed9d4869f84bfb37c3401b47388"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c191ed9d4869f84bfb37c3401b47388">&#9670;&#160;</a></span>SetThreadSizeThreshHold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CThreadPool::SetThreadSizeThreshHold </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>threshhold</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>设置线程上限阙值 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">threshhold</td><td>阙值数值 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acd56220d60c65044eec97c86398a578e" name="acd56220d60c65044eec97c86398a578e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd56220d60c65044eec97c86398a578e">&#9670;&#160;</a></span>Start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CThreadPool::Start </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em> = <code><a class="el" href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">INIT_THREAD_COUNT</a></code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>启动线程池 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td>初始线程数量,默认为cpu核心数量 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li><a class="el" href="_thread_pool_8h_source.html">ThreadPool.h</a></li>
+<li><b>ThreadPool.cpp</b></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>doxygen demo: ThreadPool.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="112199805_p0_master1200.webp"/></td>
+  <td id="projectalign">
+   <div id="projectname">doxygen demo<span id="projectnumber">&#160;1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">ThreadPool.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_thread_pool_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;queue&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;condition_variable&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;future&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">   24</a></span><span class="keyword">const</span>     <span class="keywordtype">size_t</span> <a class="code hl_variable" href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">INIT_THREAD_COUNT</a>          = std::thread::hardware_concurrency();  </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="_thread_pool_8h.html#ae5296d71e07f87c40d8e6c48eb9b73fc">   25</a></span><span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="_thread_pool_8h.html#ae5296d71e07f87c40d8e6c48eb9b73fc">THRESHOLD</a>                  = 1024;                                 </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="_thread_pool_8h.html#a177905eef7eaaecbcf66e523f18b2ef9">   26</a></span><span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="_thread_pool_8h.html#a177905eef7eaaecbcf66e523f18b2ef9">THREAD_SIZE_THRESH_HOLD</a>    = 100;                                  </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="_thread_pool_8h.html#adc6c0a523d692120a7fc3b9d99e96a41">   27</a></span><span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="_thread_pool_8h.html#adc6c0a523d692120a7fc3b9d99e96a41">THREAD_MAX_IDLE_TIME</a>       = 60;                                   </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00035" data-start="{" data-end="};">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">   35</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_enumvalue" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d">MODE_FIXED</a>,     </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_enumvalue" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58">MODE_CACHED</a>     </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
+</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="class_c_thread.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_thread.html">CThread</a></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">using </span>CALLBACK_FUNC = std::function&lt;void(<span class="keywordtype">int</span>)&gt;;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_class" href="class_c_thread.html">CThread</a>(CALLBACK_FUNC parameter) : callbackFunc_(parameter), threadId_(numbers++)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;create thread\n&quot;</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="class_c_thread.html">~CThread</a>()</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;release thread\n&quot;</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread.html#ab0e4ab268cf08a31424b4fca27f37991">Start</a>(); </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_c_thread.html#a3056478082f35daf43b587b48a6e84b2">Getid</a>()<span class="keyword">const</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    CALLBACK_FUNC callbackFunc_;                            </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> threadId_;                                          </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> numbers;                                     </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
+</div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="class_c_thread_pool.html">   73</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_thread_pool.html">CThreadPool</a></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">size_t</span>                                  count_;         <span class="comment">//初始线程数量</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">size_t</span>                                  taskMax_;       <span class="comment">//任务上限阙值</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">size_t</span>                                  threadSizeThreshHold_;<span class="comment">//线程上限阙值</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::atomic_uint                        taskSize_;      <span class="comment">//任务数量</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <a class="code hl_enumeration" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a>                               mode_;          <span class="comment">//线程池模式</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">//std::vector&lt;std::unique_ptr&lt;CThread&gt;&gt; m_arr;          //线程队列</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    std::unordered_map&lt;int, std::unique_ptr&lt;CThread&gt;&gt; threadQue_;<span class="comment">//线程队列</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">using </span>CTask = std::function&lt;void()&gt;;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    std::queue&lt;CTask&gt;                       taskQue_;           <span class="comment">//任务队列</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    std::atomic_bool                        isConfirm_;     <span class="comment">//是否依旧确定</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    std::mutex                              queMut_;        <span class="comment">//任务队列操作锁</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    std::condition_variable                 notFull_;       <span class="comment">//任务队列不满</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::condition_variable                 notEmpty_;      <span class="comment">//任务队列不空</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    std::atomic_uint                        idleThreadSize_;<span class="comment">//空闲线程数量</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    std::atomic_int                         currThreadSize_;<span class="comment">//当前线程数量</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread_pool.html#a99e6fc8eab3ba2d6c0d018f33e7251bc">SetMode</a>(<a class="code hl_enumeration" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a> parameter);                      </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="comment">//CResult AddTask(std::shared_ptr&lt;CTask&gt;);              //添加任务</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Func, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="class_c_thread_pool.html#ae13d087eb4a574e0de57e76b02590989">  104</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="class_c_thread_pool.html#ae13d087eb4a574e0de57e76b02590989">AddTask</a>(Func&amp;&amp; func, Args&amp;&amp;... args) -&gt; std::future&lt;<span class="keyword">decltype</span>(func(args...))&gt;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>{</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keyword">using </span>RType = <span class="keyword">decltype</span>(func(args...));</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> task = std::make_shared&lt;std::packaged_task&lt;RType()&gt;&gt;(</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        std::bind(std::forward&lt;Func&gt;(func),std::forward&lt;Args&gt;(args)...));</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    std::future&lt;RType&gt; result = task-&gt;get_future();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    std::unique_lock&lt;std::mutex&gt; lock(m_queMut);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">//线程的通信  等待任务队列有空余   wait   wait_for   wait_until</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// 用户提交任务，最长不能阻塞超过1s，否则判断提交任务失败，返回</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">bool</span> res = m_notFull.wait_for(lock, std::chrono::seconds(1),</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        [<span class="keyword">this</span>]()-&gt;<span class="keywordtype">bool</span> { <span class="keywordflow">return</span> m_que.size() &lt; m_taskMax; });</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordflow">if</span> (!res){</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keyword">auto</span> _task = std::make_shared&lt;std::packaged_task&lt;RType()&gt;&gt;(</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            []()-&gt;RType {<span class="keywordflow">return</span> RType(); }</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            );</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        (*_task)();</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keywordflow">return</span> _task-&gt;get_future();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// 如果有空余，把任务放入任务队列中</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="comment">//m_que.emplace(sp);//添加任务</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    m_que.emplace([task]() {(*task)(); });</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    m_taskSize++;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="comment">// 因为新放了任务，任务队列肯定不空了，在notEmpty_上进行通知，赶快分配线程执行任务</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    m_notEmpty.notify_one();</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="comment">// cached模式 任务处理比较紧急 场景：小而快的任务 需要根据任务数量和空闲线程的数量，判断是否需要创建新的线程出来</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span> (m_mode == <a class="code hl_enumvalue" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58">CPoolMode::MODE_CACHED</a>                <span class="comment">//动态方式</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        &amp;&amp; m_idleThreadSize &lt; m_taskSize                <span class="comment">//空闲线程小于任务线程</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        &amp;&amp; m_currThreadSize &lt; m_threadSizeThreshHold)   <span class="comment">//当前线程数量小于线程阈值</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    {</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="comment">//创建新的线程对象</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        std::unique_ptr&lt;CThread&gt; thread = std::make_unique&lt;CThread&gt;(std::bind(&amp;<a class="code hl_function" href="class_c_thread_pool.html#abdab417f212176a49e0f9902064dfc07">CThreadPool::CallThreadFunction</a>, <span class="keyword">this</span>, std::placeholders::_1));</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        thread-&gt;start();<span class="comment">// 启动线程</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        m_arr.emplace(thread-&gt;Getid(), std::move(thread));</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <span class="comment">// 修改线程个数相关的变量</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        m_idleThreadSize++;     <span class="comment">//空闲数量加一</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        m_currThreadSize++;     <span class="comment">//线程总数量加一</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    }</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keywordflow">return</span> result;<span class="comment">// 返回任务的Result对象</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>}</div>
+</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread_pool.html#acd56220d60c65044eec97c86398a578e">Start</a>(<span class="keywordtype">int</span> count = <a class="code hl_variable" href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">INIT_THREAD_COUNT</a>);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread_pool.html#a7761122293f52232f13da649bbe892a5">SetTaskQueMaxThreshold</a>(<span class="keywordtype">int</span> threshhold);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread_pool.html#a7c191ed9d4869f84bfb37c3401b47388">SetThreadSizeThreshHold</a>(<span class="keywordtype">size_t</span> threshhold);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_thread_pool.html#abdab417f212176a49e0f9902064dfc07">CallThreadFunction</a>(<span class="keywordtype">int</span>);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <a class="code hl_class" href="class_c_thread_pool.html">CThreadPool</a>();</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <a class="code hl_class" href="class_c_thread_pool.html">~CThreadPool</a>();</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>};</div>
+</div>
+<div class="ttc" id="a_thread_pool_8h_html_a177905eef7eaaecbcf66e523f18b2ef9"><div class="ttname"><a href="_thread_pool_8h.html#a177905eef7eaaecbcf66e523f18b2ef9">THREAD_SIZE_THRESH_HOLD</a></div><div class="ttdeci">constexpr size_t THREAD_SIZE_THRESH_HOLD</div><div class="ttdoc">默认线程池线程最大阈值</div><div class="ttdef"><b>Definition</b> ThreadPool.h:26</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_a334fa67abb73adbff0b41c8d58f36765"><div class="ttname"><a href="_thread_pool_8h.html#a334fa67abb73adbff0b41c8d58f36765">INIT_THREAD_COUNT</a></div><div class="ttdeci">const size_t INIT_THREAD_COUNT</div><div class="ttdoc">默认初始化线程池线程数量</div><div class="ttdef"><b>Definition</b> ThreadPool.h:24</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_adc6c0a523d692120a7fc3b9d99e96a41"><div class="ttname"><a href="_thread_pool_8h.html#adc6c0a523d692120a7fc3b9d99e96a41">THREAD_MAX_IDLE_TIME</a></div><div class="ttdeci">constexpr size_t THREAD_MAX_IDLE_TIME</div><div class="ttdoc">默认线程最大空闲时间s</div><div class="ttdef"><b>Definition</b> ThreadPool.h:27</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_ae5296d71e07f87c40d8e6c48eb9b73fc"><div class="ttname"><a href="_thread_pool_8h.html#ae5296d71e07f87c40d8e6c48eb9b73fc">THRESHOLD</a></div><div class="ttdeci">constexpr size_t THRESHOLD</div><div class="ttdoc">默认任务最大阈值</div><div class="ttdef"><b>Definition</b> ThreadPool.h:25</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_ae82ba535d0d603e355b17942b051550c"><div class="ttname"><a href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a></div><div class="ttdeci">CPoolMode</div><div class="ttdoc">线程池模式 两种线程池模式,一种是固定数量,一种动态增减</div><div class="ttdef"><b>Definition</b> ThreadPool.h:36</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d"><div class="ttname"><a href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d">CPoolMode::MODE_FIXED</a></div><div class="ttdeci">@ MODE_FIXED</div><div class="ttdoc">固定数量</div></div>
+<div class="ttc" id="a_thread_pool_8h_html_ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58"><div class="ttname"><a href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58">CPoolMode::MODE_CACHED</a></div><div class="ttdeci">@ MODE_CACHED</div><div class="ttdoc">动态数量</div></div>
+<div class="ttc" id="aclass_c_thread_html"><div class="ttname"><a href="class_c_thread.html">CThread</a></div><div class="ttdoc">线程简单包装类 封装了线程的启动函数,以及线程id</div><div class="ttdef"><b>Definition</b> ThreadPool.h:47</div></div>
+<div class="ttc" id="aclass_c_thread_html_a3056478082f35daf43b587b48a6e84b2"><div class="ttname"><a href="class_c_thread.html#a3056478082f35daf43b587b48a6e84b2">CThread::Getid</a></div><div class="ttdeci">int Getid() const</div><div class="ttdoc">获取线程编号</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:157</div></div>
+<div class="ttc" id="aclass_c_thread_html_ab0e4ab268cf08a31424b4fca27f37991"><div class="ttname"><a href="class_c_thread.html#ab0e4ab268cf08a31424b4fca27f37991">CThread::Start</a></div><div class="ttdeci">void Start()</div><div class="ttdoc">启动线程</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:152</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html"><div class="ttname"><a href="class_c_thread_pool.html">CThreadPool</a></div><div class="ttdoc">纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）</div><div class="ttdef"><b>Definition</b> ThreadPool.h:74</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_a7761122293f52232f13da649bbe892a5"><div class="ttname"><a href="class_c_thread_pool.html#a7761122293f52232f13da649bbe892a5">CThreadPool::SetTaskQueMaxThreshold</a></div><div class="ttdeci">void SetTaskQueMaxThreshold(int threshhold)</div><div class="ttdoc">设置任务上限阙值</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:68</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_a7c191ed9d4869f84bfb37c3401b47388"><div class="ttname"><a href="class_c_thread_pool.html#a7c191ed9d4869f84bfb37c3401b47388">CThreadPool::SetThreadSizeThreshHold</a></div><div class="ttdeci">void SetThreadSizeThreshHold(size_t threshhold)</div><div class="ttdoc">设置线程上限阙值</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:75</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_a99e6fc8eab3ba2d6c0d018f33e7251bc"><div class="ttname"><a href="class_c_thread_pool.html#a99e6fc8eab3ba2d6c0d018f33e7251bc">CThreadPool::SetMode</a></div><div class="ttdeci">void SetMode(CPoolMode parameter)</div><div class="ttdoc">设置线程池模式</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:6</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_abdab417f212176a49e0f9902064dfc07"><div class="ttname"><a href="class_c_thread_pool.html#abdab417f212176a49e0f9902064dfc07">CThreadPool::CallThreadFunction</a></div><div class="ttdeci">void CallThreadFunction(int)</div><div class="ttdoc">线程执行函数</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:82</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_acd56220d60c65044eec97c86398a578e"><div class="ttname"><a href="class_c_thread_pool.html#acd56220d60c65044eec97c86398a578e">CThreadPool::Start</a></div><div class="ttdeci">void Start(int count=INIT_THREAD_COUNT)</div><div class="ttdoc">启动线程池</div><div class="ttdef"><b>Definition</b> ThreadPool.cpp:46</div></div>
+<div class="ttc" id="aclass_c_thread_pool_html_ae13d087eb4a574e0de57e76b02590989"><div class="ttname"><a href="class_c_thread_pool.html#ae13d087eb4a574e0de57e76b02590989">CThreadPool::AddTask</a></div><div class="ttdeci">auto AddTask(Func &amp;&amp;func, Args &amp;&amp;... args) -&gt; std::future&lt; decltype(func(args...))&gt;</div><div class="ttdoc">线程池添加任务模板函数</div><div class="ttdef"><b>Definition</b> ThreadPool.h:104</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

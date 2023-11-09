@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>doxygen demo: ThreadPool.h 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="112199805_p0_master1200.webp"/></td>
+  <td id="projectalign">
+   <div id="projectname">doxygen demo<span id="projectnumber">&#160;1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#enum-members">枚举</a> &#124;
+<a href="#var-members">变量</a>  </div>
+  <div class="headertitle"><div class="title">ThreadPool.h 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;thread&gt;</code><br />
+<code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;mutex&gt;</code><br />
+<code>#include &lt;atomic&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;condition_variable&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;future&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
+</div>
+<p><a href="_thread_pool_8h_source.html">浏览源代码.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread.html">CThread</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">线程简单包装类<br  />
+封装了线程的启动函数,以及线程id  <a href="class_c_thread.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_thread_pool.html">CThreadPool</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）  <a href="class_c_thread_pool.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+枚举</h2></td></tr>
+<tr class="memitem:ae82ba535d0d603e355b17942b051550c" id="r_ae82ba535d0d603e355b17942b051550c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a> { <a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d">MODE_FIXED</a>
+, <a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58">MODE_CACHED</a>
+ }</td></tr>
+<tr class="memdesc:ae82ba535d0d603e355b17942b051550c"><td class="mdescLeft">&#160;</td><td class="mdescRight">线程池模式<br  />
+两种线程池模式,一种是固定数量,一种动态增减  <a href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">更多...</a><br /></td></tr>
+<tr class="separator:ae82ba535d0d603e355b17942b051550c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+变量</h2></td></tr>
+<tr class="memitem:a334fa67abb73adbff0b41c8d58f36765" id="r_a334fa67abb73adbff0b41c8d58f36765"><td class="memItemLeft" align="right" valign="top"><a id="a334fa67abb73adbff0b41c8d58f36765" name="a334fa67abb73adbff0b41c8d58f36765"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>INIT_THREAD_COUNT</b> = std::thread::hardware_concurrency()</td></tr>
+<tr class="memdesc:a334fa67abb73adbff0b41c8d58f36765"><td class="mdescLeft">&#160;</td><td class="mdescRight">默认初始化线程池线程数量 <br /></td></tr>
+<tr class="separator:a334fa67abb73adbff0b41c8d58f36765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5296d71e07f87c40d8e6c48eb9b73fc" id="r_ae5296d71e07f87c40d8e6c48eb9b73fc"><td class="memItemLeft" align="right" valign="top"><a id="ae5296d71e07f87c40d8e6c48eb9b73fc" name="ae5296d71e07f87c40d8e6c48eb9b73fc"></a>
+constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><b>THRESHOLD</b> = 1024</td></tr>
+<tr class="memdesc:ae5296d71e07f87c40d8e6c48eb9b73fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">默认任务最大阈值 <br /></td></tr>
+<tr class="separator:ae5296d71e07f87c40d8e6c48eb9b73fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a177905eef7eaaecbcf66e523f18b2ef9" id="r_a177905eef7eaaecbcf66e523f18b2ef9"><td class="memItemLeft" align="right" valign="top"><a id="a177905eef7eaaecbcf66e523f18b2ef9" name="a177905eef7eaaecbcf66e523f18b2ef9"></a>
+constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><b>THREAD_SIZE_THRESH_HOLD</b> = 100</td></tr>
+<tr class="memdesc:a177905eef7eaaecbcf66e523f18b2ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">默认线程池线程最大阈值 <br /></td></tr>
+<tr class="separator:a177905eef7eaaecbcf66e523f18b2ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc6c0a523d692120a7fc3b9d99e96a41" id="r_adc6c0a523d692120a7fc3b9d99e96a41"><td class="memItemLeft" align="right" valign="top"><a id="adc6c0a523d692120a7fc3b9d99e96a41" name="adc6c0a523d692120a7fc3b9d99e96a41"></a>
+constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><b>THREAD_MAX_IDLE_TIME</b> = 60</td></tr>
+<tr class="memdesc:adc6c0a523d692120a7fc3b9d99e96a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">默认线程最大空闲时间s <br /></td></tr>
+<tr class="separator:adc6c0a523d692120a7fc3b9d99e96a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量） </p>
+<dl class="section author"><dt>作者</dt><dd>xf </dd></dl>
+<dl class="section version"><dt>版本</dt><dd>bate 1.1 </dd></dl>
+<dl class="section date"><dt>日期</dt><dd>2022-03-09 </dd></dl>
+<dl class="section copyright"><dt>版权所有</dt><dd>bsd </dd></dl>
+</div><h2 class="groupheader">枚举类型说明</h2>
+<a id="ae82ba535d0d603e355b17942b051550c" name="ae82ba535d0d603e355b17942b051550c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae82ba535d0d603e355b17942b051550c">&#9670;&#160;</a></span>CPoolMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="_thread_pool_8h.html#ae82ba535d0d603e355b17942b051550c">CPoolMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>线程池模式<br  />
+两种线程池模式,一种是固定数量,一种动态增减 </p>
+<table class="fieldtable">
+<tr><th colspan="2">枚举值</th></tr><tr><td class="fieldname"><a id="ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d" name="ae82ba535d0d603e355b17942b051550ca6f8dae8d28fd5e53effc703ca5812f4d"></a>MODE_FIXED&#160;</td><td class="fielddoc"><p>固定数量 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58" name="ae82ba535d0d603e355b17942b051550ca9b44b31a565cbb6bed0ebeee32990d58"></a>MODE_CACHED&#160;</td><td class="fielddoc"><p>动态数量 </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>

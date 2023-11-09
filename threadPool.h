@@ -90,7 +90,7 @@ private:
 	std::atomic_int							currThreadSize_;//当前线程数量
 public:
 	/// @brief 设置线程池模式
-	/// @param parameter
+	/// @param parameter CPoolMode枚举类型
 	void SetMode(CPoolMode parameter);						
 
 	//CResult AddTask(std::shared_ptr<CTask>);				//添加任务
@@ -150,11 +150,11 @@ public:
 	void Start(int count = INIT_THREAD_COUNT);
 
 	/// @brief 设置任务上限阙值
-	/// @param threshhold
+	/// @param threshhold 阙值数值
 	void SetTaskQueMaxThreshold(int threshhold);
 
 	/// @brief 设置线程上限阙值
-	/// @param threshhold 
+	/// @param threshhold  阙值数值
 	void SetThreadSizeThreshHold(size_t threshhold);
 
 	/// @brief 线程执行函数

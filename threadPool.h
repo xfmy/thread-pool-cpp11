@@ -1,3 +1,13 @@
+/**
+ * @mainpage 纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）
+ * @file threadPool.h
+ * @brief 纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）
+ * @author xf
+ * @version bate 1.1
+ * @date 2022-03-09
+ * @copyright bsd
+ */
+
 #pragma once
 #include <vector>
 #include <thread>
@@ -11,25 +21,33 @@
 #include <future>
 #include <functional>
 
-constexpr size_t INIT_THREAD_COUNT			= 10;		//默认初始化线程池线程数量
-constexpr size_t THRESHOLD					= 1024;		//默认任务最大阈值
-constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;		//默认线程池线程最大阈值
-constexpr int THREAD_MAX_IDLE_TIME			= 60;		//默认线程最大空闲时间s
+const 	  size_t INIT_THREAD_COUNT 			= std::thread::hardware_concurrency(); 	///< 默认初始化线程池线程数量
+constexpr size_t THRESHOLD					= 1024;									///< 默认任务最大阈值
+constexpr size_t THREAD_SIZE_THRESH_HOLD	= 100;									///< 默认线程池线程最大阈值
+constexpr size_t THREAD_MAX_IDLE_TIME		= 60;									///< 默认线程最大空闲时间s
 
 
-//线程池模式
+
+/**
+ * @brief 线程池模式\n
+ * 两种线程池模式,一种是固定数量,一种动态增减
+ */
 enum class CPoolMode
 {
-	MODE_FIXED,		//固定数量
-	MODE_CACHED		//动态数量
+	MODE_FIXED,		///< 固定数量
+	MODE_CACHED		///< 动态数量
 };
 
-//线程类
+
+/**
+ * @brief 线程简单包装类\n
+ * 封装了线程的启动函数,以及线程id
+ */
 class CThread
 {
-	using FUNTYPE = std::function<void(int)>;
+	using CALLBACK_FUNC = std::function<void(int)>;
 public:
-	CThread(FUNTYPE parameter):m_callFun(parameter), m_threadId(numbers++) 
+	CThread(CALLBACK_FUNC parameter) : callbackFunc_(parameter), threadId_(numbers++)
 	{
 		std::cout << "create thread\n";
 	}
@@ -37,35 +55,51 @@ public:
 	{
 		std::cout << "release thread\n";
 	}
-	void start();
+
+	/// @brief 启动线程
+	void Start(); 
+
+	/// @brief 获取线程编号
+	/// @return 线程编程
 	int Getid()const;
 private:
-	FUNTYPE m_callFun;										//待执行函数对象
-	static int numbers;										//线程编号
-	int m_threadId;											//线程id
+	CALLBACK_FUNC callbackFunc_;							///> 待执行函数对象
+	int threadId_;											///> 线程id
+	static int numbers;										///> 线程编号
 };
-
+/**
+ * @brief 纯cpp11手写线程池，（互斥锁，条件变量，原子变量，手动实现cpp17 any及cpp20 信号量）
+ */
 class CThreadPool
 {
 private:
-	size_t									m_count;		//初始线程数量
-	size_t									m_taskMax;		//任务上限阙值
-	size_t									m_threadSizeThreshHold;//线程上限阙值
-	std::atomic_uint						m_taskSize;		//任务数量
-	CPoolMode								m_mode;			//线程池模式
+	size_t									count_;			//初始线程数量
+	size_t									taskMax_;		//任务上限阙值
+	size_t									threadSizeThreshHold_;//线程上限阙值
+	std::atomic_uint						taskSize_;		//任务数量
+	CPoolMode								mode_;			//线程池模式
 	//std::vector<std::unique_ptr<CThread>>	m_arr;			//线程队列
-	std::unordered_map<int, std::unique_ptr<CThread>> m_arr;//线程队列
+	std::unordered_map<int, std::unique_ptr<CThread>> threadQue_;//线程队列
 	using CTask = std::function<void()>;
-	std::queue<CTask>						m_que;			//任务队列
-	std::atomic_bool						m_isConfirm;	//是否依旧确定
-	std::mutex								m_queMut;		//任务队列操作锁
-	std::condition_variable					m_notFull;		//任务队列不满
-	std::condition_variable					m_notEmpty;		//任务队列不空
-	std::atomic_uint						m_idleThreadSize;//空闲线程数量
-	std::atomic_int							m_currThreadSize;//当前线程数量
+	std::queue<CTask>						taskQue_;			//任务队列
+	std::atomic_bool						isConfirm_;		//是否依旧确定
+	std::mutex								queMut_;		//任务队列操作锁
+	std::condition_variable					notFull_;		//任务队列不满
+	std::condition_variable					notEmpty_;		//任务队列不空
+	std::atomic_uint						idleThreadSize_;//空闲线程数量
+	std::atomic_int							currThreadSize_;//当前线程数量
 public:
-	void SetMode(CPoolMode parameter);						//设置模式
+	/// @brief 设置线程池模式
+	/// @param parameter
+	void SetMode(CPoolMode parameter);						
+
 	//CResult AddTask(std::shared_ptr<CTask>);				//添加任务
+	/**
+	 * @brief 线程池添加任务模板函数
+	 * @param func 函数对象
+	 * @param args 函数参数(不定量)
+	 * @return 返回一个future,其内包装了函数的返回值
+	 */
 	template<typename Func, typename... Args>
 	auto AddTask(Func&& func, Args&&... args) -> std::future<decltype(func(args...))>
 	{
@@ -111,10 +145,21 @@ public:
 		return result;// 返回任务的Result对象
 	}
 
-	void Start(int count = INIT_THREAD_COUNT);				//开始
-	void SetTaskQueMaxThreshold(int threshhold);			//设置任务上限阙值
-	void SetThreadSizeThreshHold(size_t threshhold);		//设置线程上限阙值
-	void CallThreadFunction(int);							//线程执行函数
+	/// @brief 启动线程池
+	/// @param count 初始线程数量,默认为cpu核心数量
+	void Start(int count = INIT_THREAD_COUNT);
+
+	/// @brief 设置任务上限阙值
+	/// @param threshhold
+	void SetTaskQueMaxThreshold(int threshhold);
+
+	/// @brief 设置线程上限阙值
+	/// @param threshhold 
+	void SetThreadSizeThreshHold(size_t threshhold);
+
+	/// @brief 线程执行函数
+	/// @param 线程编号
+	void CallThreadFunction(int);
 	CThreadPool();
 	~CThreadPool();
 };

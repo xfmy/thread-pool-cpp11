@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include "ThreadPoll.h"
+#include "threadPool.h"
 std::atomic_uint i = 0;
 //class task : public CTask
 //{
@@ -26,8 +26,8 @@ int fun(int a)
 
 int main()
 {
-    CThreadPoll* poll = new CThreadPoll;
-    poll->SetMode(CPollMode::MODE_CACHED);
+    CThreadPool* poll = new CThreadPool;
+    poll->SetMode(CPoolMode::MODE_CACHED);
     poll->Start(1);
     for (size_t i = 0; i < 10; i++)
     {
